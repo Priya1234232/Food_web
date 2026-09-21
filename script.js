@@ -18,7 +18,7 @@ function addToCart(name, price) {
     });
 
     if (existingItem) {
-        existingItem.quantity += 1;
+        existingItem.quantity++;
     } else {
         cart.push({
             name: name,
@@ -28,25 +28,24 @@ function addToCart(name, price) {
     }
 
     updateCart();
-
     showNotification(name + " added to cart!");
 }
 
 function removeFromCart(index) {
 
-    const item = cart[index];
+    const itemName = cart[index].name;
 
     cart.splice(index, 1);
 
     updateCart();
-
-    showNotification(item.name + " removed from cart!");
+    showNotification(itemName + " removed from cart!");
 }
 
 function updateCart() {
 
     const cartItems = document.getElementById("cartItems");
     const cartCount = document.getElementById("cartCount");
+    const navCartCount = document.getElementById("navCartCount");
     const totalAmount = document.getElementById("totalAmount");
 
     cartItems.innerHTML = "";
@@ -96,26 +95,103 @@ function updateCart() {
     }
 
     cartCount.textContent = count;
+    navCartCount.textContent = count;
     totalAmount.textContent = "₹" + total;
 }
 
-function placeOrder() {
+function openOrderForm() {
 
     if (cart.length === 0) {
-        showNotification("Your cart is empty!");
+        showNotification("Please add food to your cart first!");
         return;
     }
 
-    const orderTotal = cart.reduce(function(total, item) {
-        return total + item.price * item.quantity;
+    const total = cart.reduce(function(sum, item) {
+        return sum + item.price * item.quantity;
+    }, 0);
+
+    document.getElementById("formTotal").textContent = "₹" + total;
+    document.getElementById("orderModal").style.display = "flex";
+}
+
+function closeOrderForm() {
+    document.getElementById("orderModal").style.display = "none";
+}
+
+document.getElementById("orderForm").addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const name = document.getElementById("customerName").value.trim();
+    const phone = document.getElementById("customerPhone").value.trim();
+    const email = document.getElementById("customerEmail").value.trim();
+    const address = document.getElementById("customerAddress").value.trim();
+    const city = document.getElementById("customerCity").value.trim();
+    const pincode = document.getElementById("customerPincode").value.trim();
+    const payment = document.getElementById("paymentMethod").value;
+
+    if (name === "" || phone === "" || email === "" || address === "" || city === "" || pincode === "" || payment === "") {
+        showNotification("Please fill all details!");
+        return;
+    }
+
+    if (!/^[0-9]{10}$/.test(phone)) {
+        showNotification("Enter a valid 10 digit phone number!");
+        return;
+    }
+
+    if (!/^[0-9]{6}$/.test(pincode)) {
+        showNotification("Enter a valid 6 digit pincode!");
+        return;
+    }
+
+    if (!email.includes("@")) {
+        showNotification("Enter a valid email address!");
+        return;
+    }
+
+    const total = cart.reduce(function(sum, item) {
+        return sum + item.price * item.quantity;
     }, 0);
 
     cart = [];
 
     updateCart();
+    closeOrderForm();
 
-    showNotification("Order placed successfully! 🎉 Total: ₹" + orderTotal);
-}
+    document.getElementById("orderForm").reset();
+
+    showNotification("Order confirmed successfully! Total ₹" + total);
+});
+
+document.getElementById("searchInput").addEventListener("input", function() {
+
+    const searchValue = this.value.toLowerCase().trim();
+
+    const foodCards = document.querySelectorAll(".food-card");
+
+    let found = 0;
+
+    foodCards.forEach(function(card) {
+
+        const foodName = card.dataset.name;
+
+        if (foodName.includes(searchValue)) {
+            card.style.display = "";
+            found++;
+        } else {
+            card.style.display = "none";
+        }
+    });
+
+    const noResults = document.getElementById("noResults");
+
+    if (found === 0) {
+        noResults.style.display = "block";
+    } else {
+        noResults.style.display = "none";
+    }
+});
 
 function showNotification(message) {
 
@@ -123,7 +199,6 @@ function showNotification(message) {
     const notificationText = document.getElementById("notificationText");
 
     notificationText.textContent = message;
-
     notification.style.display = "flex";
 
     clearTimeout(window.notificationTimer);
@@ -134,106 +209,14 @@ function showNotification(message) {
 }
 
 function closeNotification() {
-
-    const notification = document.getElementById("notification");
-
-    notification.style.display = "none";
+    document.getElementById("notification").style.display = "none";
 }
 
-const searchInput = document.getElementById("searchInput");
+document.getElementById("orderModal").addEventListener("click", function(event) {
 
-searchInput.addEventListener("input", function() {
-
-    const searchValue = searchInput.value.toLowerCase().trim();
-
-    const foodCards = document.querySelectorAll(".food-card");
-
-    let visibleItems = 0;
-
-    foodCards.forEach(function(card) {
-
-        const foodName = card.dataset.name.toLowerCase();
-
-        if (foodName.includes(searchValue)) {
-            card.style.display = "";
-            visibleItems++;
-        } else {
-            card.style.display = "none";
-        }
-    });
-
-    const noResults = document.getElementById("noResults");
-
-    if (visibleItems === 0) {
-        noResults.style.display = "block";
-    } else {
-        noResults.style.display = "none";
+    if (event.target === this) {
+        closeOrderForm();
     }
 });
 
 updateCart();
-function placeOrder() {
-
-    if (cart.length === 0) {
-        showNotification("Your cart is empty!");
-        return;
-    }
-
-    document.getElementById("orderModal").style.display = "flex";
-}
-
-function closeOrderForm() {
-    document.getElementById("orderModal").style.display = "none";
-}
-
-function confirmOrder() {
-
-    const name = document.getElementById("customerName").value.trim();
-    const phone = document.getElementById("customerPhone").value.trim();
-    const address = document.getElementById("customerAddress").value.trim();
-    const city = document.getElementById("customerCity").value.trim();
-    const pincode = document.getElementById("customerPincode").value.trim();
-    const payment = document.getElementById("paymentMethod").value;
-
-    if (!name || !phone || !address || !city || !pincode || !payment) {
-        showNotification("Please fill all order details!");
-        return;
-    }
-
-    if (phone.length < 10) {
-        showNotification("Please enter a valid phone number!");
-        return;
-    }
-
-    if (pincode.length !== 6) {
-        showNotification("Please enter a valid pincode!");
-        return;
-    }
-
-    const orderTotal = cart.reduce(function(total, item) {
-        return total + item.price * item.quantity;
-    }, 0);
-
-    cart = [];
-
-    updateCart();
-
-    closeOrderForm();
-
-    document.getElementById("customerName").value = "";
-    document.getElementById("customerPhone").value = "";
-    document.getElementById("customerAddress").value = "";
-    document.getElementById("customerCity").value = "";
-    document.getElementById("customerPincode").value = "";
-    document.getElementById("paymentMethod").value = "";
-
-    showNotification("Order placed successfully! 🎉 Total: ₹" + orderTotal);
-}
-
-window.addEventListener("click", function(event) {
-    const modal = document.getElementById("orderModal");
-
-    if (event.target === modal) {
-        closeOrderForm();
-    }
-});
