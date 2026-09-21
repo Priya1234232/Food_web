@@ -294,6 +294,7 @@
     </section>
 
 </main>
+    
 
 <footer>
 
@@ -311,6 +312,29 @@
 </footer>
 
 <script src="script.js"></script>
+<div id="orderModal" class="order-modal">
+    <div class="order-form">
+        <button class="close-order" onclick="closeOrderForm()">×</button>
 
+        <h2>Order Details</h2>
+
+        <input type="text" id="customerName" placeholder="Full Name">
+        <input type="tel" id="customerPhone" placeholder="Phone Number">
+        <textarea id="customerAddress" placeholder="Delivery Address"></textarea>
+        <input type="text" id="customerCity" placeholder="City">
+        <input type="text" id="customerPincode" placeholder="Pincode">
+
+        <select id="paymentMethod">
+            <option value="">Select Payment Method</option>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+            <option value="UPI">UPI</option>
+            <option value="Card">Credit / Debit Card</option>
+        </select>
+
+        <button class="confirm-order" onclick="confirmOrder()">
+            Confirm Order
+        </button>
+    </div>
+</div>
 </body>
 </html>
