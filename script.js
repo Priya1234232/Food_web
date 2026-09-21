@@ -12,12 +12,13 @@ const foodImages = {
 };
 
 function addToCart(name, price) {
+
     const existingItem = cart.find(function(item) {
         return item.name === name;
     });
 
     if (existingItem) {
-        existingItem.quantity++;
+        existingItem.quantity += 1;
     } else {
         cart.push({
             name: name,
@@ -31,7 +32,19 @@ function addToCart(name, price) {
     showNotification(name + " added to cart!");
 }
 
+function removeFromCart(index) {
+
+    const item = cart[index];
+
+    cart.splice(index, 1);
+
+    updateCart();
+
+    showNotification(item.name + " removed from cart!");
+}
+
 function updateCart() {
+
     const cartItems = document.getElementById("cartItems");
     const cartCount = document.getElementById("cartCount");
     const totalAmount = document.getElementById("totalAmount");
@@ -42,77 +55,72 @@ function updateCart() {
     let count = 0;
 
     if (cart.length === 0) {
+
         cartItems.innerHTML = `
             <div class="empty-cart">
                 Your cart is empty
             </div>
         `;
+
+    } else {
+
+        cart.forEach(function(item, index) {
+
+            const itemTotal = item.price * item.quantity;
+
+            total += itemTotal;
+            count += item.quantity;
+
+            const cartItem = document.createElement("div");
+
+            cartItem.className = "cart-item";
+
+            cartItem.innerHTML = `
+                <img src="${foodImages[item.name]}" alt="${item.name}">
+
+                <div class="cart-item-details">
+                    <h3>${item.name}</h3>
+                    <p>₹${item.price} × ${item.quantity}</p>
+                    <button class="remove-button" onclick="removeFromCart(${index})">
+                        Remove
+                    </button>
+                </div>
+
+                <div class="cart-item-total">
+                    ₹${itemTotal}
+                </div>
+            `;
+
+            cartItems.appendChild(cartItem);
+        });
     }
-
-    cart.forEach(function(item, index) {
-        const itemTotal = item.price * item.quantity;
-
-        total += itemTotal;
-        count += item.quantity;
-
-        const cartItem = document.createElement("div");
-
-        cartItem.className = "cart-item";
-
-        cartItem.innerHTML = `
-            <img src="${foodImages[item.name]}" alt="${item.name}">
-
-            <div class="cart-item-info">
-                <h3>${item.name}</h3>
-                <p>₹${item.price} × ${item.quantity}</p>
-
-                <button
-                    class="remove-btn"
-                    onclick="removeFromCart(${index})"
-                >
-                    Remove
-                </button>
-            </div>
-
-            <div class="cart-item-price">
-                ₹${itemTotal}
-            </div>
-        `;
-
-        cartItems.appendChild(cartItem);
-    });
 
     cartCount.textContent = count;
     totalAmount.textContent = "₹" + total;
 }
 
-function removeFromCart(index) {
-    cart.splice(index, 1);
-
-    updateCart();
-
-    showNotification("Item removed from cart.");
-}
-
 function placeOrder() {
+
     if (cart.length === 0) {
-        showNotification("Please add food to your cart first!");
+        showNotification("Your cart is empty!");
         return;
     }
+
+    const orderTotal = cart.reduce(function(total, item) {
+        return total + item.price * item.quantity;
+    }, 0);
 
     cart = [];
 
     updateCart();
 
-    showNotification("Order placed successfully! 🎉");
+    showNotification("Order placed successfully! 🎉 Total: ₹" + orderTotal);
 }
 
 function showNotification(message) {
-    const notification =
-        document.getElementById("notification");
 
-    const notificationText =
-        document.getElementById("notificationText");
+    const notification = document.getElementById("notification");
+    const notificationText = document.getElementById("notificationText");
 
     notificationText.textContent = message;
 
@@ -126,29 +134,41 @@ function showNotification(message) {
 }
 
 function closeNotification() {
-    document.getElementById("notification").style.display = "none";
+
+    const notification = document.getElementById("notification");
+
+    notification.style.display = "none";
 }
 
-document.getElementById("searchInput").addEventListener(
-    "input",
-    function() {
-        const searchValue =
-            this.value.toLowerCase().trim();
+const searchInput = document.getElementById("searchInput");
 
-        const foodCards =
-            document.querySelectorAll(".food-card");
+searchInput.addEventListener("input", function() {
 
-        foodCards.forEach(function(card) {
-            const foodName =
-                card.dataset.name.toLowerCase();
+    const searchValue = searchInput.value.toLowerCase().trim();
 
-            if (foodName.includes(searchValue)) {
-                card.style.display = "";
-            } else {
-                card.style.display = "none";
-            }
-        });
+    const foodCards = document.querySelectorAll(".food-card");
+
+    let visibleItems = 0;
+
+    foodCards.forEach(function(card) {
+
+        const foodName = card.dataset.name.toLowerCase();
+
+        if (foodName.includes(searchValue)) {
+            card.style.display = "";
+            visibleItems++;
+        } else {
+            card.style.display = "none";
+        }
+    });
+
+    const noResults = document.getElementById("noResults");
+
+    if (visibleItems === 0) {
+        noResults.style.display = "block";
+    } else {
+        noResults.style.display = "none";
     }
-);
+});
 
 updateCart();
