@@ -172,3 +172,68 @@ searchInput.addEventListener("input", function() {
 });
 
 updateCart();
+function placeOrder() {
+
+    if (cart.length === 0) {
+        showNotification("Your cart is empty!");
+        return;
+    }
+
+    document.getElementById("orderModal").style.display = "flex";
+}
+
+function closeOrderForm() {
+    document.getElementById("orderModal").style.display = "none";
+}
+
+function confirmOrder() {
+
+    const name = document.getElementById("customerName").value.trim();
+    const phone = document.getElementById("customerPhone").value.trim();
+    const address = document.getElementById("customerAddress").value.trim();
+    const city = document.getElementById("customerCity").value.trim();
+    const pincode = document.getElementById("customerPincode").value.trim();
+    const payment = document.getElementById("paymentMethod").value;
+
+    if (!name || !phone || !address || !city || !pincode || !payment) {
+        showNotification("Please fill all order details!");
+        return;
+    }
+
+    if (phone.length < 10) {
+        showNotification("Please enter a valid phone number!");
+        return;
+    }
+
+    if (pincode.length !== 6) {
+        showNotification("Please enter a valid pincode!");
+        return;
+    }
+
+    const orderTotal = cart.reduce(function(total, item) {
+        return total + item.price * item.quantity;
+    }, 0);
+
+    cart = [];
+
+    updateCart();
+
+    closeOrderForm();
+
+    document.getElementById("customerName").value = "";
+    document.getElementById("customerPhone").value = "";
+    document.getElementById("customerAddress").value = "";
+    document.getElementById("customerCity").value = "";
+    document.getElementById("customerPincode").value = "";
+    document.getElementById("paymentMethod").value = "";
+
+    showNotification("Order placed successfully! 🎉 Total: ₹" + orderTotal);
+}
+
+window.addEventListener("click", function(event) {
+    const modal = document.getElementById("orderModal");
+
+    if (event.target === modal) {
+        closeOrderForm();
+    }
+});
