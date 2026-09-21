@@ -1,24 +1,24 @@
 let cart = [];
 
-const images = {
+const foodImages = {
     Pizza: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80",
     Burger: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
     Pasta: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=600&q=80",
     Biryani: "https://images.unsplash.com/photo-1563379091339-03246963d51a?auto=format&fit=crop&w=600&q=80",
     Dosa: "https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&w=600&q=80",
-    Idli: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80",
     Noodles: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80",
-    Sandwich: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=600&q=80"
+    Sandwich: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=600&q=80",
+    Cake: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80"
 };
 
 function addToCart(name, price) {
 
-    let item = cart.find(function(food) {
-        return food.name === name;
+    const existing = cart.find(function(item) {
+        return item.name === name;
     });
 
-    if (item) {
-        item.quantity++;
+    if (existing) {
+        existing.quantity++;
     } else {
         cart.push({
             name: name,
@@ -34,14 +34,11 @@ function addToCart(name, price) {
 function updateCart() {
 
     const cartItems = document.getElementById("cartItems");
-    const cartCount = document.getElementById("cartCount");
-    const navCartCount = document.getElementById("navCartCount");
-    const totalElement = document.getElementById("total");
-
-    cartItems.innerHTML = "";
 
     let total = 0;
     let count = 0;
+
+    cartItems.innerHTML = "";
 
     if (cart.length === 0) {
 
@@ -55,7 +52,7 @@ function updateCart() {
 
         cart.forEach(function(item, index) {
 
-            let itemTotal = item.price * item.quantity;
+            const itemTotal = item.price * item.quantity;
 
             total += itemTotal;
             count += item.quantity;
@@ -63,7 +60,7 @@ function updateCart() {
             cartItems.innerHTML += `
                 <div class="cart-item">
 
-                    <img src="${images[item.name]}" alt="${item.name}">
+                    <img src="${foodImages[item.name]}" alt="${item.name}">
 
                     <div class="cart-details">
                         <h3>${item.name}</h3>
@@ -83,14 +80,14 @@ function updateCart() {
         });
     }
 
-    cartCount.textContent = count;
-    navCartCount.textContent = count;
-    totalElement.textContent = "₹" + total;
+    document.getElementById("cartCount").textContent = count;
+    document.getElementById("navCount").textContent = count;
+    document.getElementById("totalAmount").textContent = "₹" + total;
 }
 
 function removeItem(index) {
 
-    let name = cart[index].name;
+    const name = cart[index].name;
 
     cart.splice(index, 1);
 
@@ -102,7 +99,7 @@ function removeItem(index) {
 function openOrder() {
 
     if (cart.length === 0) {
-        showMessage("Please add food to cart first");
+        showMessage("Please add food to your cart first");
         return;
     }
 
@@ -125,13 +122,13 @@ document.getElementById("orderForm").addEventListener("submit", function(event) 
 
     event.preventDefault();
 
-    let name = document.getElementById("name").value.trim();
-    let phone = document.getElementById("phone").value.trim();
-    let email = document.getElementById("email").value.trim();
-    let address = document.getElementById("address").value.trim();
-    let city = document.getElementById("city").value.trim();
-    let pincode = document.getElementById("pincode").value.trim();
-    let payment = document.getElementById("payment").value;
+    const name = document.getElementById("customerName").value.trim();
+    const phone = document.getElementById("customerPhone").value.trim();
+    const email = document.getElementById("customerEmail").value.trim();
+    const address = document.getElementById("customerAddress").value.trim();
+    const city = document.getElementById("customerCity").value.trim();
+    const pincode = document.getElementById("customerPincode").value.trim();
+    const payment = document.getElementById("payment").value;
 
     if (
         name === "" ||
@@ -169,38 +166,35 @@ document.getElementById("orderForm").addEventListener("submit", function(event) 
 
     document.getElementById("orderModal").style.display = "none";
 
-    alert(
-        "ORDER PLACED SUCCESSFULLY!\n\n" +
-        "Name: " + name + "\n" +
-        "Phone: " + phone + "\n" +
-        "Email: " + email + "\n" +
-        "Address: " + address + "\n" +
-        "City: " + city + "\n" +
-        "Pincode: " + pincode + "\n" +
-        "Payment: " + payment + "\n" +
-        "Total: ₹" + total
-    );
+    document.getElementById("successDetails").innerHTML =
+        "Thank you, <b>" + name + "</b>.<br>" +
+        "Your order total is <b>₹" + total + "</b>.<br>" +
+        "Payment: <b>" + payment + "</b>";
+
+    document.getElementById("successModal").style.display = "flex";
 
     cart = [];
 
     updateCart();
 
     document.getElementById("orderForm").reset();
-
-    showMessage("Your order has been placed successfully");
 });
+
+function closeSuccess() {
+    document.getElementById("successModal").style.display = "none";
+}
 
 document.getElementById("search").addEventListener("input", function() {
 
-    let value = this.value.toLowerCase().trim();
+    const value = this.value.toLowerCase().trim();
 
-    let foods = document.querySelectorAll(".food");
+    const foods = document.querySelectorAll(".food-card");
 
     let found = 0;
 
     foods.forEach(function(food) {
 
-        let name = food.dataset.name.toLowerCase();
+        const name = food.dataset.name;
 
         if (name.includes(value)) {
             food.style.display = "";
@@ -210,7 +204,7 @@ document.getElementById("search").addEventListener("input", function() {
         }
     });
 
-    document.getElementById("noFood").style.display =
+    document.getElementById("noResult").style.display =
         found === 0 ? "block" : "none";
 });
 
@@ -221,9 +215,16 @@ document.getElementById("orderModal").addEventListener("click", function(event) 
     }
 });
 
+document.getElementById("successModal").addEventListener("click", function(event) {
+
+    if (event.target === this) {
+        closeSuccess();
+    }
+});
+
 function showMessage(text) {
 
-    let message = document.getElementById("message");
+    const message = document.getElementById("message");
 
     message.textContent = text;
     message.style.display = "block";
