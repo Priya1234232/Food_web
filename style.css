@@ -598,3 +598,85 @@ footer {
         justify-content: center;
     }
 }
+.order-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.order-form {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.order-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #17233a;
+}
+
+.order-form input,
+.order-form textarea,
+.order-form select {
+    width: 100%;
+    padding: 13px;
+    margin-bottom: 14px;
+    border: 1px solid #d5dce2;
+    border-radius: 5px;
+    font-size: 15px;
+    outline: none;
+}
+
+.order-form textarea {
+    height: 90px;
+    resize: none;
+}
+
+.order-form input:focus,
+.order-form textarea:focus,
+.order-form select:focus {
+    border-color: #ff4b18;
+}
+
+.close-order {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #555;
+}
+
+.confirm-order {
+    width: 100%;
+    padding: 14px;
+    background: #16a34a;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.confirm-order:hover {
+    background: #11833c;
+}
+
+@media (max-width: 500px) {
+    .order-form {
+        padding: 22px;
+    }
+}
