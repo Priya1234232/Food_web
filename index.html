@@ -27,17 +27,18 @@
         <a href="#menu">Menu</a>
         <a href="#about">About</a>
         <a href="#cart">
-            <i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="navCartCount">0</span>
         </a>
     </nav>
 
-    <div id="notification" class="notification">
-        <i class="fa-solid fa-circle-check"></i>
-        <span id="notificationText"></span>
-        <button onclick="closeNotification()">×</button>
-    </div>
-
 </header>
+
+<div id="notification" class="notification">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="notificationText"></span>
+    <button onclick="closeNotification()">×</button>
+</div>
 
 <main id="home">
 
@@ -105,132 +106,78 @@
         <section class="menu-section" id="menu">
 
             <div class="menu-header">
-
                 <h2>Food Menu</h2>
 
                 <div class="search-box">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Search food..."
-                    >
+                    <input type="text" id="searchInput" placeholder="Search food...">
                 </div>
-
             </div>
 
-            <div class="food-grid" id="foodGrid">
+            <div class="food-grid">
 
                 <div class="food-card" data-name="pizza">
-
                     <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80" alt="Pizza">
-
                     <h3>Pizza</h3>
                     <p>Cheese Pizza</p>
                     <strong>₹250</strong>
-
-                    <button onclick="addToCart('Pizza', 250)">
-                        Add to Cart
-                    </button>
-
+                    <button onclick="addToCart('Pizza',250)">Add to Cart</button>
                 </div>
 
                 <div class="food-card" data-name="burger">
-
                     <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80" alt="Burger">
-
                     <h3>Burger</h3>
                     <p>Cheese Burger</p>
                     <strong>₹150</strong>
-
-                    <button onclick="addToCart('Burger', 150)">
-                        Add to Cart
-                    </button>
-
+                    <button onclick="addToCart('Burger',150)">Add to Cart</button>
                 </div>
 
                 <div class="food-card" data-name="pasta">
-
                     <img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=600&q=80" alt="Pasta">
-
                     <h3>Pasta</h3>
                     <p>White Sauce Pasta</p>
                     <strong>₹200</strong>
-
-                    <button onclick="addToCart('Pasta', 200)">
-                        Add to Cart
-                    </button>
-
+                    <button onclick="addToCart('Pasta',200)">Add to Cart</button>
                 </div>
 
                 <div class="food-card" data-name="biryani">
-
                     <img src="https://images.unsplash.com/photo-1563379091339-03246963d51a?auto=format&fit=crop&w=600&q=80" alt="Biryani">
-
                     <h3>Biryani</h3>
                     <p>Chicken Biryani</p>
                     <strong>₹220</strong>
-
-                    <button onclick="addToCart('Biryani', 220)">
-                        Add to Cart
-                    </button>
-
+                    <button onclick="addToCart('Biryani',220)">Add to Cart</button>
                 </div>
 
                 <div class="food-card" data-name="dosa">
-
                     <img src="https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&w=600&q=80" alt="Dosa">
-
                     <h3>Dosa</h3>
                     <p>Masala Dosa</p>
                     <strong>₹100</strong>
-
-                    <button onclick="addToCart('Dosa', 100)">
-                        Add to Cart
-                    </button>
-
+                    <button onclick="addToCart('Dosa',100)">Add to Cart</button>
                 </div>
 
                 <div class="food-card" data-name="idli">
-
                     <img src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80" alt="Idli">
-
                     <h3>Idli</h3>
-                    <p>Soft Idli (2 pcs)</p>
+                    <p>Soft Idli</p>
                     <strong>₹60</strong>
-
-                    <button onclick="addToCart('Idli', 60)">
-                        Add to Cart
-                    </button>
-
+                    <button onclick="addToCart('Idli',60)">Add to Cart</button>
                 </div>
 
                 <div class="food-card" data-name="noodles">
-
                     <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80" alt="Noodles">
-
                     <h3>Noodles</h3>
                     <p>Veg Noodles</p>
                     <strong>₹120</strong>
-
-                    <button onclick="addToCart('Noodles', 120)">
-                        Add to Cart
-                    </button>
-
+                    <button onclick="addToCart('Noodles',120)">Add to Cart</button>
                 </div>
 
                 <div class="food-card" data-name="sandwich">
-
                     <img src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=600&q=80" alt="Sandwich">
-
                     <h3>Sandwich</h3>
                     <p>Veg Sandwich</p>
                     <strong>₹80</strong>
-
-                    <button onclick="addToCart('Sandwich', 80)">
-                        Add to Cart
-                    </button>
-
+                    <button onclick="addToCart('Sandwich',80)">Add to Cart</button>
                 </div>
 
             </div>
@@ -257,13 +204,12 @@
                     <span id="totalAmount">₹0</span>
                 </div>
 
-                <button class="place-order" onclick="placeOrder()">
+                <button class="place-order" onclick="openOrderForm()">
                     <i class="fa-solid fa-cart-shopping"></i>
                     Place Order
                 </button>
 
                 <div class="good-food">
-
                     <i class="fa-solid fa-utensils"></i>
 
                     <div>
@@ -272,7 +218,6 @@
                     </div>
 
                     <span>😊</span>
-
                 </div>
 
             </div>
@@ -294,7 +239,59 @@
     </section>
 
 </main>
-    
+
+<div id="orderModal" class="order-modal">
+
+    <div class="order-form">
+
+        <button class="close-order" onclick="closeOrderForm()">×</button>
+
+        <h2>Order Person Details</h2>
+
+        <form id="orderForm">
+
+            <label>Full Name</label>
+            <input type="text" id="customerName" placeholder="Enter your name">
+
+            <label>Phone Number</label>
+            <input type="tel" id="customerPhone" placeholder="Enter phone number">
+
+            <label>Email</label>
+            <input type="email" id="customerEmail" placeholder="Enter email">
+
+            <label>Delivery Address</label>
+            <textarea id="customerAddress" placeholder="Enter your complete address"></textarea>
+
+            <label>City</label>
+            <input type="text" id="customerCity" placeholder="Enter city">
+
+            <label>Pincode</label>
+            <input type="text" id="customerPincode" placeholder="Enter pincode">
+
+            <label>Payment Method</label>
+
+            <select id="paymentMethod">
+                <option value="">Select Payment Method</option>
+                <option value="Cash on Delivery">Cash on Delivery</option>
+                <option value="UPI">UPI</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Debit Card">Debit Card</option>
+            </select>
+
+            <div class="order-summary">
+                <span>Order Total</span>
+                <strong id="formTotal">₹0</strong>
+            </div>
+
+            <button type="submit" class="confirm-order">
+                Confirm Order
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
 
 <footer>
 
@@ -312,29 +309,6 @@
 </footer>
 
 <script src="script.js"></script>
-<div id="orderModal" class="order-modal">
-    <div class="order-form">
-        <button class="close-order" onclick="closeOrderForm()">×</button>
 
-        <h2>Order Details</h2>
-
-        <input type="text" id="customerName" placeholder="Full Name">
-        <input type="tel" id="customerPhone" placeholder="Phone Number">
-        <textarea id="customerAddress" placeholder="Delivery Address"></textarea>
-        <input type="text" id="customerCity" placeholder="City">
-        <input type="text" id="customerPincode" placeholder="Pincode">
-
-        <select id="paymentMethod">
-            <option value="">Select Payment Method</option>
-            <option value="Cash on Delivery">Cash on Delivery</option>
-            <option value="UPI">UPI</option>
-            <option value="Card">Credit / Debit Card</option>
-        </select>
-
-        <button class="confirm-order" onclick="confirmOrder()">
-            Confirm Order
-        </button>
-    </div>
-</div>
 </body>
 </html>
