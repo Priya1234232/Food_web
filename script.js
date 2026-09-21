@@ -1,316 +1,154 @@
 let cart = [];
 
-
-// ADD FOOD TO CART
+const foodImages = {
+    Pizza: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80",
+    Burger: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
+    Pasta: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=600&q=80",
+    Biryani: "https://images.unsplash.com/photo-1563379091339-03246963d51a?auto=format&fit=crop&w=600&q=80",
+    Dosa: "https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&w=600&q=80",
+    Idli: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80",
+    Noodles: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80",
+    Sandwich: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=600&q=80"
+};
 
 function addToCart(name, price) {
-
-    let existingItem = cart.find(item => item.name === name);
+    const existingItem = cart.find(function(item) {
+        return item.name === name;
+    });
 
     if (existingItem) {
-
         existingItem.quantity++;
-
     } else {
-
         cart.push({
             name: name,
             price: price,
             quantity: 1
         });
-
     }
 
-    displayCart();
+    updateCart();
 
-    alert(name + " added to cart!");
+    showNotification(name + " added to cart!");
 }
 
-
-// DISPLAY CART
-
-function displayCart() {
-
-    let cartItems = document.getElementById("cartItems");
+function updateCart() {
+    const cartItems = document.getElementById("cartItems");
+    const cartCount = document.getElementById("cartCount");
+    const totalAmount = document.getElementById("totalAmount");
 
     cartItems.innerHTML = "";
 
-    if (cart.length === 0) {
-
-        cartItems.innerHTML =
-            '<p class="empty-cart">Your cart is empty.</p>';
-
-        document.getElementById("total").innerText = 0;
-
-        return;
-    }
-
-
     let total = 0;
+    let count = 0;
 
-
-    cart.forEach(function(item, index) {
-
-        let itemTotal =
-            item.price * item.quantity;
-
-        total += itemTotal;
-
-
-        cartItems.innerHTML += `
-
-            <div class="cart-item">
-
-                <div>
-                    <strong>${item.name}</strong>
-
-                    <p>
-                        ₹${item.price} × ${item.quantity}
-                    </p>
-                </div>
-
-
-                <div class="quantity">
-
-                    <button onclick="decreaseItem(${index})">
-                        -
-                    </button>
-
-                    ${item.quantity}
-
-                    <button onclick="increaseItem(${index})">
-                        +
-                    </button>
-
-                    <button
-                        class="remove-btn"
-                        onclick="removeItem(${index})">
-                        Remove
-                    </button>
-
-                </div>
-
+    if (cart.length === 0) {
+        cartItems.innerHTML = `
+            <div class="empty-cart">
+                Your cart is empty
             </div>
         `;
+    }
+
+    cart.forEach(function(item, index) {
+        const itemTotal = item.price * item.quantity;
+
+        total += itemTotal;
+        count += item.quantity;
+
+        const cartItem = document.createElement("div");
+
+        cartItem.className = "cart-item";
+
+        cartItem.innerHTML = `
+            <img src="${foodImages[item.name]}" alt="${item.name}">
+
+            <div class="cart-item-info">
+                <h3>${item.name}</h3>
+                <p>₹${item.price} × ${item.quantity}</p>
+
+                <button
+                    class="remove-btn"
+                    onclick="removeFromCart(${index})"
+                >
+                    Remove
+                </button>
+            </div>
+
+            <div class="cart-item-price">
+                ₹${itemTotal}
+            </div>
+        `;
+
+        cartItems.appendChild(cartItem);
     });
 
-
-    document.getElementById("total").innerText = total;
+    cartCount.textContent = count;
+    totalAmount.textContent = "₹" + total;
 }
 
-
-// INCREASE QUANTITY
-
-function increaseItem(index) {
-
-    cart[index].quantity++;
-
-    displayCart();
-}
-
-
-// DECREASE QUANTITY
-
-function decreaseItem(index) {
-
-    if (cart[index].quantity > 1) {
-
-        cart[index].quantity--;
-
-    } else {
-
-        cart.splice(index, 1);
-
-    }
-
-    displayCart();
-}
-
-
-// REMOVE ITEM
-
-function removeItem(index) {
-
+function removeFromCart(index) {
     cart.splice(index, 1);
 
-    displayCart();
+    updateCart();
+
+    showNotification("Item removed from cart.");
 }
-
-
-// OPEN ORDER FORM
-
-function openOrderForm() {
-
-    if (cart.length === 0) {
-
-        alert("Please add food to your cart first!");
-
-        return;
-    }
-
-    document.getElementById("orderForm").style.display = "block";
-
-    document.getElementById("orderForm")
-        .scrollIntoView();
-}
-
-
-// PLACE ORDER
 
 function placeOrder() {
-
-    let name =
-        document.getElementById("customerName").value;
-
-    let phone =
-        document.getElementById("phone").value;
-
-    let address =
-        document.getElementById("address").value;
-
-    let payment =
-        document.getElementById("payment").value;
-
-
-    if (
-        name === "" ||
-        phone === "" ||
-        address === "" ||
-        payment === ""
-    ) {
-
-        alert("Please fill all delivery details!");
-
+    if (cart.length === 0) {
+        showNotification("Please add food to your cart first!");
         return;
     }
-
-
-    let total =
-        document.getElementById("total").innerText;
-
-
-    document.getElementById("orderStatus").innerHTML = `
-
-        <h3>🎉 Order Confirmed!</h3>
-
-        <p>
-            Thank you, <strong>${name}</strong>
-        </p>
-
-        <p>
-            Your order will be delivered to:
-        </p>
-
-        <p>
-            ${address}
-        </p>
-
-        <h3>
-            Total Amount: ₹${total}
-        </h3>
-
-        <p>
-            Payment: ${payment}
-        </p>
-
-        <br>
-
-        <p>
-            🛵 Your food is being prepared...
-        </p>
-
-    `;
-
-
-    alert("🎉 Order placed successfully!");
-
-
-    // CLEAR CART
 
     cart = [];
 
-    displayCart();
+    updateCart();
 
-
-    // HIDE ORDER FORM
-
-    document.getElementById("orderForm").style.display = "none";
-
-
-    // GO TO ORDERS
-
-    document.getElementById("orders")
-        .scrollIntoView();
+    showNotification("Order placed successfully! 🎉");
 }
 
+function showNotification(message) {
+    const notification =
+        document.getElementById("notification");
 
-// SEARCH FOOD
+    const notificationText =
+        document.getElementById("notificationText");
 
-function searchFood() {
+    notificationText.textContent = message;
 
-    let searchValue =
-        document.getElementById("search")
-            .value
-            .toLowerCase();
+    notification.style.display = "flex";
 
+    clearTimeout(window.notificationTimer);
 
-    let foods =
-        document.querySelectorAll(".food-card");
-
-
-    foods.forEach(function(food) {
-
-        let foodName =
-            food.querySelector("h3")
-                .innerText
-                .toLowerCase();
-
-
-        if (foodName.includes(searchValue)) {
-
-            food.style.display = "block";
-
-        } else {
-
-            food.style.display = "none";
-
-        }
-
-    });
+    window.notificationTimer = setTimeout(function() {
+        notification.style.display = "none";
+    }, 3000);
 }
 
-
-// FILTER FOOD
-
-function filterFood(category) {
-
-    let foods =
-        document.querySelectorAll(".food-card");
-
-
-    foods.forEach(function(food) {
-
-        if (
-            category === "all" ||
-            food.dataset.category === category
-        ) {
-
-            food.style.display = "block";
-
-        } else {
-
-            food.style.display = "none";
-
-        }
-
-    });
+function closeNotification() {
+    document.getElementById("notification").style.display = "none";
 }
 
+document.getElementById("searchInput").addEventListener(
+    "input",
+    function() {
+        const searchValue =
+            this.value.toLowerCase().trim();
 
-// ORDER NOW BUTTON
+        const foodCards =
+            document.querySelectorAll(".food-card");
 
-function scrollToMenu() {
+        foodCards.forEach(function(card) {
+            const foodName =
+                card.dataset.name.toLowerCase();
 
-    document.getElementById("menu")
-        .scrollIntoView();
-}
+            if (foodName.includes(searchValue)) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    }
+);
+
+updateCart();
