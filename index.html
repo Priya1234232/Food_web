@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foodie Food Delivery</title>
+    <title>Foodie</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
@@ -20,23 +20,21 @@
 
     <nav>
         <a href="#home">Home</a>
+        <a href="#restaurant">Restaurant</a>
         <a href="#menu">Menu</a>
-        <a href="#about">About</a>
-        <a href="#cart">
-            Cart <span id="navCartCount">0</span>
-        </a>
+        <a href="#cart">Cart <span id="navCount">0</span></a>
     </nav>
 </header>
 
 <div id="message"></div>
 
-<main>
-
 <section class="restaurant" id="home">
 
-    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=80">
+    <div class="restaurant-image">
+        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=80">
+    </div>
 
-    <div class="restaurant-info">
+    <div class="restaurant-info" id="restaurant">
         <h2>ABC Restaurant</h2>
 
         <div class="rating">
@@ -45,9 +43,20 @@
             <span>500+ Reviews</span>
         </div>
 
-        <p><i class="fa-solid fa-utensils"></i> South Indian, Chinese & Fast Food</p>
-        <p><i class="fa-solid fa-location-dot"></i> Coimbatore, Tamil Nadu</p>
-        <p><i class="fa-regular fa-clock"></i> Open: 10:00 AM - 10:00 PM</p>
+        <p>
+            <i class="fa-solid fa-utensils"></i>
+            South Indian, Chinese & Fast Food
+        </p>
+
+        <p>
+            <i class="fa-solid fa-location-dot"></i>
+            Coimbatore, Tamil Nadu
+        </p>
+
+        <p>
+            <i class="fa-regular fa-clock"></i>
+            Open: 10:00 AM - 10:00 PM
+        </p>
 
         <p class="description">
             Fresh food, tasty meals and quick delivery.
@@ -63,11 +72,11 @@
 
 </section>
 
-<section class="content">
+<main class="container">
 
-<section class="menu" id="menu">
+<section class="menu-section" id="menu">
 
-    <div class="menu-title">
+    <div class="menu-header">
         <h2>Food Menu</h2>
 
         <div class="search">
@@ -76,117 +85,127 @@
         </div>
     </div>
 
-    <div class="foods">
+    <div class="food-grid">
 
-        <div class="food" data-name="pizza">
+        <div class="food-card" data-name="pizza">
             <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80">
             <h3>Pizza</h3>
             <p>Cheese Pizza</p>
             <strong>₹250</strong>
-            <button onclick="addToCart('Pizza',250)">Add to Cart</button>
+            <button onclick="addToCart('Pizza',250)">
+                Add to Cart
+            </button>
         </div>
 
-        <div class="food" data-name="burger">
+        <div class="food-card" data-name="burger">
             <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80">
             <h3>Burger</h3>
             <p>Cheese Burger</p>
             <strong>₹150</strong>
-            <button onclick="addToCart('Burger',150)">Add to Cart</button>
+            <button onclick="addToCart('Burger',150)">
+                Add to Cart
+            </button>
         </div>
 
-        <div class="food" data-name="pasta">
+        <div class="food-card" data-name="pasta">
             <img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=600&q=80">
             <h3>Pasta</h3>
             <p>White Sauce Pasta</p>
             <strong>₹200</strong>
-            <button onclick="addToCart('Pasta',200)">Add to Cart</button>
+            <button onclick="addToCart('Pasta',200)">
+                Add to Cart
+            </button>
         </div>
 
-        <div class="food" data-name="biryani">
+        <div class="food-card" data-name="biryani">
             <img src="https://images.unsplash.com/photo-1563379091339-03246963d51a?auto=format&fit=crop&w=600&q=80">
             <h3>Biryani</h3>
             <p>Chicken Biryani</p>
             <strong>₹220</strong>
-            <button onclick="addToCart('Biryani',220)">Add to Cart</button>
+            <button onclick="addToCart('Biryani',220)">
+                Add to Cart
+            </button>
         </div>
 
-        <div class="food" data-name="dosa">
+        <div class="food-card" data-name="dosa">
             <img src="https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&w=600&q=80">
             <h3>Dosa</h3>
             <p>Masala Dosa</p>
             <strong>₹100</strong>
-            <button onclick="addToCart('Dosa',100)">Add to Cart</button>
+            <button onclick="addToCart('Dosa',100)">
+                Add to Cart
+            </button>
         </div>
 
-        <div class="food" data-name="idli">
-            <img src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80">
-            <h3>Idli</h3>
-            <p>Soft Idli</p>
-            <strong>₹60</strong>
-            <button onclick="addToCart('Idli',60)">Add to Cart</button>
-        </div>
-
-        <div class="food" data-name="noodles">
+        <div class="food-card" data-name="noodles">
             <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80">
             <h3>Noodles</h3>
             <p>Veg Noodles</p>
             <strong>₹120</strong>
-            <button onclick="addToCart('Noodles',120)">Add to Cart</button>
+            <button onclick="addToCart('Noodles',120)">
+                Add to Cart
+            </button>
         </div>
 
-        <div class="food" data-name="sandwich">
+        <div class="food-card" data-name="sandwich">
             <img src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=600&q=80">
             <h3>Sandwich</h3>
             <p>Veg Sandwich</p>
             <strong>₹80</strong>
-            <button onclick="addToCart('Sandwich',80)">Add to Cart</button>
+            <button onclick="addToCart('Sandwich',80)">
+                Add to Cart
+            </button>
+        </div>
+
+        <div class="food-card" data-name="cake">
+            <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80">
+            <h3>Cake</h3>
+            <p>Chocolate Cake</p>
+            <strong>₹180</strong>
+            <button onclick="addToCart('Cake',180)">
+                Add to Cart
+            </button>
         </div>
 
     </div>
 
-    <div id="noFood">Food not found</div>
+    <div id="noResult">No food found</div>
 
 </section>
 
-<aside class="cart" id="cart">
+<aside class="cart-section" id="cart">
 
-    <h2>
-        <i class="fa-solid fa-cart-shopping"></i>
-        Your Cart (<span id="cartCount">0</span>)
-    </h2>
+    <div class="cart-box">
 
-    <div id="cartItems"></div>
+        <h2>
+            <i class="fa-solid fa-cart-shopping"></i>
+            Your Cart (<span id="cartCount">0</span>)
+        </h2>
 
-    <div class="total">
-        <b>Total Amount</b>
-        <strong id="total">₹0</strong>
-    </div>
+        <div id="cartItems"></div>
 
-    <button class="place-order" onclick="openOrder()">
-        <i class="fa-solid fa-cart-shopping"></i>
-        Place Order
-    </button>
-
-    <div class="good-food">
-        <i class="fa-solid fa-utensils"></i>
-        <div>
-            <b>Good Food</b>
-            <b>Good Mood!</b>
+        <div class="total">
+            <b>Total Amount</b>
+            <strong id="totalAmount">₹0</strong>
         </div>
-        <span>😊</span>
+
+        <button class="place-order" onclick="openOrder()">
+            <i class="fa-solid fa-cart-shopping"></i>
+            Place Order
+        </button>
+
+        <div class="good-food">
+            <i class="fa-solid fa-utensils"></i>
+            <div>
+                <b>Good Food</b>
+                <b>Good Mood!</b>
+            </div>
+            <span>😊</span>
+        </div>
+
     </div>
 
 </aside>
-
-</section>
-
-<section class="about" id="about">
-    <h2>About Foodie</h2>
-    <p>
-        Foodie helps you order your favourite food from your favourite restaurant.
-        Select food, add it to your cart and place your order easily.
-    </p>
-</section>
 
 </main>
 
@@ -201,22 +220,22 @@
         <form id="orderForm">
 
             <label>Full Name</label>
-            <input type="text" id="name" placeholder="Enter your name">
+            <input type="text" id="customerName" placeholder="Enter your name">
 
             <label>Phone Number</label>
-            <input type="tel" id="phone" placeholder="Enter 10 digit phone number">
+            <input type="tel" id="customerPhone" placeholder="Enter phone number">
 
             <label>Email</label>
-            <input type="email" id="email" placeholder="Enter your email">
+            <input type="email" id="customerEmail" placeholder="Enter email">
 
             <label>Delivery Address</label>
-            <textarea id="address" placeholder="Enter delivery address"></textarea>
+            <textarea id="customerAddress" placeholder="Enter complete address"></textarea>
 
             <label>City</label>
-            <input type="text" id="city" placeholder="Enter city">
+            <input type="text" id="customerCity" placeholder="Enter city">
 
             <label>Pincode</label>
-            <input type="text" id="pincode" placeholder="Enter 6 digit pincode">
+            <input type="text" id="customerPincode" placeholder="Enter pincode">
 
             <label>Payment Method</label>
 
@@ -233,11 +252,33 @@
                 <strong id="orderTotal">₹0</strong>
             </div>
 
-            <button type="submit" class="confirm">
+            <button type="submit" class="confirm-order">
                 Confirm Order
             </button>
 
         </form>
+
+    </div>
+
+</div>
+
+<div class="success-modal" id="successModal">
+
+    <div class="success-box">
+
+        <div class="success-icon">
+            <i class="fa-solid fa-check"></i>
+        </div>
+
+        <h2>Order Placed Successfully!</h2>
+
+        <p>Your food order has been received.</p>
+
+        <p id="successDetails"></p>
+
+        <button onclick="closeSuccess()">
+            Continue Shopping
+        </button>
 
     </div>
 
