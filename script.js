@@ -1,6 +1,6 @@
 let cart = [];
 
-const foodImages = {
+const images = {
     Pizza: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80",
     Burger: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
     Pasta: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=600&q=80",
@@ -13,12 +13,12 @@ const foodImages = {
 
 function addToCart(name, price) {
 
-    const existingItem = cart.find(function(item) {
-        return item.name === name;
+    let item = cart.find(function(food) {
+        return food.name === name;
     });
 
-    if (existingItem) {
-        existingItem.quantity++;
+    if (item) {
+        item.quantity++;
     } else {
         cart.push({
             name: name,
@@ -28,17 +28,7 @@ function addToCart(name, price) {
     }
 
     updateCart();
-    showNotification(name + " added to cart!");
-}
-
-function removeFromCart(index) {
-
-    const itemName = cart[index].name;
-
-    cart.splice(index, 1);
-
-    updateCart();
-    showNotification(itemName + " removed from cart!");
+    showMessage(name + " added to cart");
 }
 
 function updateCart() {
@@ -46,7 +36,7 @@ function updateCart() {
     const cartItems = document.getElementById("cartItems");
     const cartCount = document.getElementById("cartCount");
     const navCartCount = document.getElementById("navCartCount");
-    const totalAmount = document.getElementById("totalAmount");
+    const totalElement = document.getElementById("total");
 
     cartItems.innerHTML = "";
 
@@ -56,7 +46,7 @@ function updateCart() {
     if (cart.length === 0) {
 
         cartItems.innerHTML = `
-            <div class="empty-cart">
+            <div class="empty">
                 Your cart is empty
             </div>
         `;
@@ -65,56 +55,69 @@ function updateCart() {
 
         cart.forEach(function(item, index) {
 
-            const itemTotal = item.price * item.quantity;
+            let itemTotal = item.price * item.quantity;
 
             total += itemTotal;
             count += item.quantity;
 
-            const cartItem = document.createElement("div");
+            cartItems.innerHTML += `
+                <div class="cart-item">
 
-            cartItem.className = "cart-item";
+                    <img src="${images[item.name]}" alt="${item.name}">
 
-            cartItem.innerHTML = `
-                <img src="${foodImages[item.name]}" alt="${item.name}">
+                    <div class="cart-details">
+                        <h3>${item.name}</h3>
+                        <p>₹${item.price} × ${item.quantity}</p>
 
-                <div class="cart-item-details">
-                    <h3>${item.name}</h3>
-                    <p>₹${item.price} × ${item.quantity}</p>
-                    <button class="remove-button" onclick="removeFromCart(${index})">
-                        Remove
-                    </button>
-                </div>
+                        <button class="remove" onclick="removeItem(${index})">
+                            Remove
+                        </button>
+                    </div>
 
-                <div class="cart-item-total">
-                    ₹${itemTotal}
+                    <div class="cart-price">
+                        ₹${itemTotal}
+                    </div>
+
                 </div>
             `;
-
-            cartItems.appendChild(cartItem);
         });
     }
 
     cartCount.textContent = count;
     navCartCount.textContent = count;
-    totalAmount.textContent = "₹" + total;
+    totalElement.textContent = "₹" + total;
 }
 
-function openOrderForm() {
+function removeItem(index) {
+
+    let name = cart[index].name;
+
+    cart.splice(index, 1);
+
+    updateCart();
+
+    showMessage(name + " removed from cart");
+}
+
+function openOrder() {
 
     if (cart.length === 0) {
-        showNotification("Please add food to your cart first!");
+        showMessage("Please add food to cart first");
         return;
     }
 
-    const total = cart.reduce(function(sum, item) {
-        return sum + item.price * item.quantity;
-    }, 0);
+    let total = 0;
 
-    document.getElementById("formTotal").textContent = "₹" + total;
+    cart.forEach(function(item) {
+        total += item.price * item.quantity;
+    });
+
+    document.getElementById("orderTotal").textContent = "₹" + total;
+
     document.getElementById("orderModal").style.display = "flex";
 }
 
-function closeOrderForm() {
+function closeOrder() {
     document.getElementById("orderModal").style.display = "none";
 }
 
@@ -122,101 +125,114 @@ document.getElementById("orderForm").addEventListener("submit", function(event) 
 
     event.preventDefault();
 
-    const name = document.getElementById("customerName").value.trim();
-    const phone = document.getElementById("customerPhone").value.trim();
-    const email = document.getElementById("customerEmail").value.trim();
-    const address = document.getElementById("customerAddress").value.trim();
-    const city = document.getElementById("customerCity").value.trim();
-    const pincode = document.getElementById("customerPincode").value.trim();
-    const payment = document.getElementById("paymentMethod").value;
+    let name = document.getElementById("name").value.trim();
+    let phone = document.getElementById("phone").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let address = document.getElementById("address").value.trim();
+    let city = document.getElementById("city").value.trim();
+    let pincode = document.getElementById("pincode").value.trim();
+    let payment = document.getElementById("payment").value;
 
-    if (name === "" || phone === "" || email === "" || address === "" || city === "" || pincode === "" || payment === "") {
-        showNotification("Please fill all details!");
+    if (
+        name === "" ||
+        phone === "" ||
+        email === "" ||
+        address === "" ||
+        city === "" ||
+        pincode === "" ||
+        payment === ""
+    ) {
+        showMessage("Please fill all details");
         return;
     }
 
     if (!/^[0-9]{10}$/.test(phone)) {
-        showNotification("Enter a valid 10 digit phone number!");
+        showMessage("Enter a valid 10 digit phone number");
         return;
     }
 
     if (!/^[0-9]{6}$/.test(pincode)) {
-        showNotification("Enter a valid 6 digit pincode!");
+        showMessage("Enter a valid 6 digit pincode");
         return;
     }
 
     if (!email.includes("@")) {
-        showNotification("Enter a valid email address!");
+        showMessage("Enter a valid email");
         return;
     }
 
-    const total = cart.reduce(function(sum, item) {
-        return sum + item.price * item.quantity;
-    }, 0);
+    let total = 0;
+
+    cart.forEach(function(item) {
+        total += item.price * item.quantity;
+    });
+
+    document.getElementById("orderModal").style.display = "none";
+
+    alert(
+        "ORDER PLACED SUCCESSFULLY!\n\n" +
+        "Name: " + name + "\n" +
+        "Phone: " + phone + "\n" +
+        "Email: " + email + "\n" +
+        "Address: " + address + "\n" +
+        "City: " + city + "\n" +
+        "Pincode: " + pincode + "\n" +
+        "Payment: " + payment + "\n" +
+        "Total: ₹" + total
+    );
 
     cart = [];
 
     updateCart();
-    closeOrderForm();
 
     document.getElementById("orderForm").reset();
 
-    showNotification("Order confirmed successfully! Total ₹" + total);
+    showMessage("Your order has been placed successfully");
 });
 
-document.getElementById("searchInput").addEventListener("input", function() {
+document.getElementById("search").addEventListener("input", function() {
 
-    const searchValue = this.value.toLowerCase().trim();
+    let value = this.value.toLowerCase().trim();
 
-    const foodCards = document.querySelectorAll(".food-card");
+    let foods = document.querySelectorAll(".food");
 
     let found = 0;
 
-    foodCards.forEach(function(card) {
+    foods.forEach(function(food) {
 
-        const foodName = card.dataset.name;
+        let name = food.dataset.name.toLowerCase();
 
-        if (foodName.includes(searchValue)) {
-            card.style.display = "";
+        if (name.includes(value)) {
+            food.style.display = "";
             found++;
         } else {
-            card.style.display = "none";
+            food.style.display = "none";
         }
     });
 
-    const noResults = document.getElementById("noResults");
-
-    if (found === 0) {
-        noResults.style.display = "block";
-    } else {
-        noResults.style.display = "none";
-    }
+    document.getElementById("noFood").style.display =
+        found === 0 ? "block" : "none";
 });
-
-function showNotification(message) {
-
-    const notification = document.getElementById("notification");
-    const notificationText = document.getElementById("notificationText");
-
-    notificationText.textContent = message;
-    notification.style.display = "flex";
-
-    clearTimeout(window.notificationTimer);
-
-    window.notificationTimer = setTimeout(function() {
-        notification.style.display = "none";
-    }, 3000);
-}
-
-function closeNotification() {
-    document.getElementById("notification").style.display = "none";
-}
 
 document.getElementById("orderModal").addEventListener("click", function(event) {
 
     if (event.target === this) {
-        closeOrderForm();
+        closeOrder();
     }
 });
+
+function showMessage(text) {
+
+    let message = document.getElementById("message");
+
+    message.textContent = text;
+    message.style.display = "block";
+
+    clearTimeout(window.messageTimer);
+
+    window.messageTimer = setTimeout(function() {
+        message.style.display = "none";
+    }, 2500);
+}
 
 updateCart();
